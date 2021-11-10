@@ -1,24 +1,40 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
+function useLogger(value){
+  React.useEffect(() => {
+    console.log('Value changed: ', value)
+  }, [value])
+}
+
+function useInput(initialValue){
+  const [value, setValue] = React.useState(initialValue);
+  const onChange = (e) => setValue(e.target.value);
+  const clear = () => setValue('');
+  return {
+    bind: {
+      value, onChange
+    },
+    value,
+    clear
+  }
+}
+
 function App() {
+
+  const input = useInput('');
+
+  useLogger(input.value);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="container pt-3">
+        <button onClick={input.clear} className="btn btn-danger">Очистить инпут</button>
+          <hr />
+          <input type="text" {...input.bind}/>
+          <hr />
+          <h2>{input.value}</h2>
+      </div>
+    
   );
 }
 
